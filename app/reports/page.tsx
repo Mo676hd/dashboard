@@ -1,5 +1,7 @@
 "use client"
 
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Table,
@@ -9,32 +11,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
+import { Plus, Search } from "lucide-react"
 import { NewReportDialog } from "@/components/new-report-dialog"
-import { UserSwitcher } from "@/components/user-switcher"
-import { useState } from "react"
-
-const mockStats = [
-  {
-    title: "Total Cars Received This Month",
-    value: "47",
-    change: "+12%",
-    icon: "🚗",
-  },
-  {
-    title: "Highest Car Model Received",
-    value: "Toyota Camry",
-    change: "8 units",
-    icon: "🏆",
-  },
-  {
-    title: "Total Reports Generated",
-    value: "156",
-    change: "+23%",
-    icon: "📊",
-  }
-]
+import { Input } from "@/components/ui/input"
 
 const mockReports = [
   {
@@ -172,41 +151,40 @@ const getStatusColor = (status: string) => {
   }
 }
 
-export default function Dashboard() {
+export default function ReportsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [searchTerm, setSearchTerm] = useState("")
+
+  const filteredReports = mockReports.filter(report =>
+    report.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    report.plateNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    report.customerContact.toLowerCase().includes(searchTerm.toLowerCase())
+  )
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <Button onClick={() => setIsDialogOpen(true)}>
-          <Plus className="w-4 h-4 mr-2" />
-          New Report
-        </Button>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {mockStats.map((stat, index) => (
-          <Card key={index}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
-                {stat.title}
-              </CardTitle>
-              <div className="text-2xl">{stat.icon}</div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stat.value}</div>
-              <p className="text-xs text-muted-foreground">
-                {stat.change}
-              </p>
-            </CardContent>
-          </Card>
-        ))}
+    <div>
+      <div className="flex flex-col gap-4 mb-6">
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-gray-900">Reports</h1>
+          <Button onClick={() => setIsDialogOpen(true)}>
+            <Plus className="w-4 h-4 mr-2" />
+            New Report
+          </Button>
+        </div>
+        <div className="relative max-w-md">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Input
+            placeholder="Search by Report ID, Plate Number, or Customer Contact..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+        </div>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Latest Reports</CardTitle>
+          <CardTitle>All Reports</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
@@ -224,30 +202,30 @@ export default function Dashboard() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockReports.slice(0, 10).map((report) => (
-                <TableRow key={report.id}>
+              {filteredReports.map((reportItem) => (
+                <TableRow key={reportItem.id}>
                   <TableCell className="font-medium">
                     <a
-                      href={`/reports/${report.id}`}
+                      href={`/reports/${reportItem.id}`}
                       className="text-blue-600 hover:text-blue-800 underline"
                     >
-                      {report.id}
+                      {reportItem.id}
                     </a>
                   </TableCell>
-                  <TableCell>{report.customerName}</TableCell>
-                  <TableCell>{report.customerContact}</TableCell>
-                  <TableCell>{report.plateNumber}</TableCell>
-                  <TableCell className="font-mono text-sm">{report.chassisNumber}</TableCell>
-                  <TableCell>{report.make}</TableCell>
-                  <TableCell>{report.model}</TableCell>
-                  <TableCell>{report.color}</TableCell>
+                  <TableCell>{reportItem.customerName}</TableCell>
+                  <TableCell>{reportItem.customerContact}</TableCell>
+                  <TableCell>{reportItem.plateNumber}</TableCell>
+                  <TableCell className="font-mono text-sm">{reportItem.chassisNumber}</TableCell>
+                  <TableCell>{reportItem.make}</TableCell>
+                  <TableCell>{reportItem.model}</TableCell>
+                  <TableCell>{reportItem.color}</TableCell>
                   <TableCell>
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                        report.status
+                        reportItem.status
                       )}`}
                     >
-                      {report.status}
+                      {reportItem.status}
                     </span>
                   </TableCell>
                 </TableRow>
@@ -258,10 +236,6 @@ export default function Dashboard() {
       </Card>
 
       <NewReportDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
-
-      <div className="fixed bottom-4 right-4 z-50">
-        <UserSwitcher />
-      </div>
     </div>
   )
 }
