@@ -13,12 +13,13 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { ArrowLeft, Camera, FileText, CheckCircle } from "lucide-react"
-import { SelectTriggerProps } from "@radix-ui/react-select"
+import { RichTextEditor } from "@/components/rich-text-editor"
+import { toast } from "sonner"
 
 const mockReport = {
-  id: "CS001",
+  id: "RPT-001",
   customerName: "John Doe",
-  contact: "+1 (555) 123-4567",
+  contact: "+973 33393139",
   carMakeModel: "Toyota Camry 2020",
   plateNumber: "ABC-1234",
   color: "Silver",
@@ -41,6 +42,24 @@ const mockRepairs = [
 
 export default function ReportDetailPage({ params }: { params: { id: string } }) {
   const [status, setStatus] = useState(mockReport.status)
+  const [remarks, setRemarks] = useState(`
+    <h4>Initial Assessment:</h4>
+    <p>Front bumper shows significant damage from collision. Passenger side headlight cracked and needs replacement. Minor door dent on driver side.</p>
+
+    <h4>AI Generated Report:</h4>
+    <p>Based on the uploaded images, this vehicle has sustained moderate frontal damage. The AI system identified the following issues:</p>
+    <ul>
+      <li>Front bumper: Requires complete replacement</li>
+      <li>Headlight assembly: Cracked, needs replacement</li>
+      <li>Driver side door: Minor dent, can be repaired</li>
+    </ul>
+
+    <p><em>Use this editor to add corrections, additional remarks, or override AI-generated content.</em></p>
+  `)
+
+  const handleSaveRemarks = () => {
+    toast.success("Remarks saved successfully!")
+  }
 
   return (
     <div className="p-6">
@@ -106,6 +125,10 @@ export default function ReportDetailPage({ params }: { params: { id: string } })
             <FileText className="w-4 h-4" />
             Report
           </TabsTrigger>
+          <TabsTrigger value="remarks" className="flex items-center gap-2">
+            <FileText className="w-4 h-4" />
+            Remarks
+          </TabsTrigger>
           <TabsTrigger value="status" className="flex items-center gap-2">
             <CheckCircle className="w-4 h-4" />
             Status
@@ -157,6 +180,29 @@ export default function ReportDetailPage({ params }: { params: { id: string } })
                   Minor door dent on driver side. Overall repairable condition.
                 </p>
               </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="remarks">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <span>Report Remarks & Corrections</span>
+                <Button onClick={handleSaveRemarks}>
+                  Save Remarks
+                </Button>
+              </CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Add additional notes, corrections to AI-generated content, or detailed remarks about this inspection.
+              </p>
+            </CardHeader>
+            <CardContent>
+              <RichTextEditor
+                content={remarks}
+                onChange={setRemarks}
+                placeholder="Add your remarks, corrections, or additional notes here..."
+              />
             </CardContent>
           </Card>
         </TabsContent>

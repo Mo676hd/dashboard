@@ -19,6 +19,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Upload } from "lucide-react"
+import { toast } from "sonner"
 
 interface NewReportDialogProps {
   open: boolean
@@ -50,12 +52,12 @@ export function NewReportDialog({ open, onOpenChange }: NewReportDialogProps) {
   const [formData, setFormData] = useState({
     customerName: "",
     customerNumber: "",
+    plateNumber: "",
     chassisNumber: "",
     make: "",
     model: "",
     year: "",
     color: "",
-    plateNumber: "",
     images: [] as File[]
   })
 
@@ -63,17 +65,18 @@ export function NewReportDialog({ open, onOpenChange }: NewReportDialogProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    toast.success("Report created successfully!")
     console.log("New report submitted:", formData)
     // Reset form
     setFormData({
       customerName: "",
       customerNumber: "",
+      plateNumber: "",
       chassisNumber: "",
       make: "",
       model: "",
       year: "",
       color: "",
-      plateNumber: "",
       images: []
     })
     onOpenChange(false)
@@ -100,9 +103,9 @@ export function NewReportDialog({ open, onOpenChange }: NewReportDialogProps) {
             Enter the details for the new report. Click save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-2 gap-6 py-4">
-            {/* Left Column */}
+        <form onSubmit={handleSubmit} className="flex flex-col h-full">
+          <div className="space-y-4 py-4 flex-1">
+            {/* Customer Information */}
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="customerName">Customer Name</Label>
@@ -120,7 +123,21 @@ export function NewReportDialog({ open, onOpenChange }: NewReportDialogProps) {
                   id="customerNumber"
                   value={formData.customerNumber}
                   onChange={(e) => handleInputChange("customerNumber", e.target.value)}
-                  placeholder="+1 (555) 123-4567"
+                  placeholder="+973 33393139"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Vehicle Information */}
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="plateNumber">Plate Number</Label>
+                <Input
+                  id="plateNumber"
+                  value={formData.plateNumber}
+                  onChange={(e) => handleInputChange("plateNumber", e.target.value)}
+                  placeholder="ABC-1234"
                   required
                 />
               </div>
@@ -135,8 +152,11 @@ export function NewReportDialog({ open, onOpenChange }: NewReportDialogProps) {
                   required
                 />
               </div>
+            </div>
 
-              <div className="space-y-2">
+            {/* Vehicle Details */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+              <div className="lg:col-span-5 space-y-2">
                 <Label htmlFor="make">Make</Label>
                 <Select value={formData.make} onValueChange={(value) => handleInputChange("make", value)}>
                   <SelectTrigger>
@@ -150,7 +170,7 @@ export function NewReportDialog({ open, onOpenChange }: NewReportDialogProps) {
                 </Select>
               </div>
 
-              <div className="space-y-2">
+              <div className="lg:col-span-4 space-y-2">
                 <Label htmlFor="model">Model</Label>
                 <Select
                   value={formData.model}
@@ -167,11 +187,8 @@ export function NewReportDialog({ open, onOpenChange }: NewReportDialogProps) {
                   </SelectContent>
                 </Select>
               </div>
-            </div>
 
-            {/* Right Column */}
-            <div className="space-y-4">
-              <div className="space-y-2">
+              <div className="lg:col-span-3 space-y-2">
                 <Label htmlFor="year">Year</Label>
                 <Select value={formData.year} onValueChange={(value) => handleInputChange("year", value)}>
                   <SelectTrigger>
@@ -184,61 +201,38 @@ export function NewReportDialog({ open, onOpenChange }: NewReportDialogProps) {
                   </SelectContent>
                 </Select>
               </div>
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="color">Color</Label>
+            {/* Image Upload - Full width at bottom */}
+            <div className="space-y-2">
+              <Label htmlFor="images">Upload Images</Label>
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                 <Input
-                  id="color"
-                  value={formData.color}
-                  onChange={(e) => handleInputChange("color", e.target.value)}
-                  placeholder="e.g., Silver, Black, White"
+                  id="images"
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="hidden"
                 />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="plateNumber">Plate Number</Label>
-                <Input
-                  id="plateNumber"
-                  value={formData.plateNumber}
-                  onChange={(e) => handleInputChange("plateNumber", e.target.value)}
-                  placeholder="ABC-1234"
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="images">Upload Images</Label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
-                  <Input
-                    id="images"
-                    type="file"
-                    multiple
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="hidden"
-                  />
-                  <label
-                    htmlFor="images"
-                    className="cursor-pointer flex flex-col items-center"
-                  >
-                    <div className="text-gray-400 mb-2">
-                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                      </svg>
-                    </div>
-                    <span className="text-sm text-gray-600">
-                      {formData.images.length > 0
-                        ? `${formData.images.length} file(s) selected`
-                        : "Click to upload images or drag and drop"
-                      }
-                    </span>
-                    <span className="text-xs text-gray-400">PNG, JPG, GIF up to 10MB each</span>
-                  </label>
-                </div>
+                <label
+                  htmlFor="images"
+                  className="cursor-pointer flex flex-col items-center"
+                >
+                  <Upload className="w-8 h-8 text-gray-400 mb-2" />
+                  <span className="text-sm text-gray-600">
+                    {formData.images.length > 0
+                      ? `${formData.images.length} file(s) selected`
+                      : "Click to upload images or drag and drop"
+                    }
+                  </span>
+                  <span className="text-xs text-gray-400 mt-1">PNG, JPG, GIF up to 10MB each</span>
+                </label>
               </div>
             </div>
           </div>
-          <DialogFooter>
+
+          <DialogFooter className="pt-4">
             <Button type="submit">Save Report</Button>
           </DialogFooter>
         </form>

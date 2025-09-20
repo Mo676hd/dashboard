@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { PageProtection } from "@/components/page-protection"
+import { Users, Crown, Wrench } from "lucide-react"
 
 const mockTeam = [
   {
@@ -112,7 +113,7 @@ export default function TeamPage() {
                 <CardTitle className="text-sm font-medium">
                   Total Team Members
                 </CardTitle>
-                <div className="text-2xl">👥</div>
+                <Users className="w-8 h-8 text-blue-600" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{mockTeam.length}</div>
@@ -127,7 +128,7 @@ export default function TeamPage() {
                 <CardTitle className="text-sm font-medium">
                   Super Users
                 </CardTitle>
-                <div className="text-2xl">👑</div>
+                <Crown className="w-8 h-8 text-purple-600" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
@@ -144,7 +145,7 @@ export default function TeamPage() {
                 <CardTitle className="text-sm font-medium">
                   Service Advisors
                 </CardTitle>
-                <div className="text-2xl">🔧</div>
+                <Wrench className="w-8 h-8 text-green-600" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">

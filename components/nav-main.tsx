@@ -4,6 +4,14 @@ import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
+import { useAuth } from "@/lib/auth"
+import {
+  Home,
+  FileText,
+  Users,
+  BarChart3,
+  Settings,
+} from "lucide-react"
 
 import {
   SidebarMenu,
@@ -13,25 +21,41 @@ import {
 
 export function NavMain() {
   const pathname = usePathname()
+  const { user } = useAuth()
 
   const items = [
     {
       title: "Dashboard",
       url: "/dashboard",
+      icon: Home,
     },
     {
       title: "Reports",
       url: "/reports",
-    },
-    {
-      title: "Team",
-      url: "/team",
-    },
-    {
-      title: "Analytics",
-      url: "/analytics",
+      icon: FileText,
     },
   ]
+
+  // Add admin-only items
+  if (user?.role === 'superuser') {
+    items.push(
+      {
+        title: "Team",
+        url: "/team",
+        icon: Users,
+      },
+      {
+        title: "Analytics",
+        url: "/analytics",
+        icon: BarChart3,
+      },
+      {
+        title: "Settings",
+        url: "/settings",
+        icon: Settings,
+      }
+    )
+  }
 
   return (
     <SidebarMenu>
@@ -45,7 +69,10 @@ export function NavMain() {
               pathname === item.url && "bg-accent text-accent-foreground"
             )}
           >
-            <Link href={item.url}>{item.title}</Link>
+            <Link href={item.url} className="flex items-center gap-2">
+              <item.icon className="w-4 h-4" />
+              {item.title}
+            </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>
       ))}

@@ -117,12 +117,6 @@ export function NavUser({
                   Account
                 </a>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <a href="/settings">
-                  <IconSettings />
-                  Settings
-                </a>
-              </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={logout}>

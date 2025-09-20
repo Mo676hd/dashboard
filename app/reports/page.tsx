@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import React from "react"
 import { NewReportDialog } from "@/components/new-report-dialog"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -12,126 +13,138 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Plus, Search } from "lucide-react"
+import { Plus, Search, Eye, Printer, Share2, ChevronDown } from "lucide-react"
 import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
+import { toast } from "sonner"
 
 const mockReports = [
   {
-    id: "RP001",
+    id: "RPT-001",
     customerName: "John Doe",
-    customerContact: "+1 (555) 123-4567",
+    customerContact: "+973 33393139",
     plateNumber: "ABC-1234",
     chassisNumber: "1HGBH41JXMN109186",
     make: "Toyota",
     model: "Camry",
+    year: 2020,
     color: "Silver",
     status: "Pending",
     date: "2024-01-15"
   },
   {
-    id: "RP002",
+    id: "RPT-002",
     customerName: "Jane Smith",
-    customerContact: "+1 (555) 234-5678",
+    customerContact: "+973 33393140",
     plateNumber: "XYZ-5678",
     chassisNumber: "2HGBP26F1XM543210",
     make: "Honda",
     model: "Civic",
+    year: 2021,
     color: "Blue",
     status: "In Progress",
     date: "2024-01-14"
   },
   {
-    id: "RP003",
+    id: "RPT-003",
     customerName: "Bob Johnson",
-    customerContact: "+1 (555) 345-6789",
+    customerContact: "+973 33393141",
     plateNumber: "DEF-9012",
     chassisNumber: "1FAFP404XYF123456",
     make: "Ford",
     model: "Mustang",
+    year: 2022,
     color: "Red",
     status: "Completed",
     date: "2024-01-13"
   },
   {
-    id: "RP004",
+    id: "RPT-004",
     customerName: "Alice Brown",
-    customerContact: "+1 (555) 456-7890",
+    customerContact: "+973 33393142",
     plateNumber: "GHI-3456",
     chassisNumber: "5UXKR0C54B098765",
     make: "BMW",
     model: "X5",
+    year: 2023,
     color: "Black",
     status: "Pending",
     date: "2024-01-12"
   },
   {
-    id: "RP005",
+    id: "RPT-005",
     customerName: "Charlie Wilson",
-    customerContact: "+1 (555) 567-8901",
+    customerContact: "+973 33393143",
     plateNumber: "JKL-7890",
     chassisNumber: "WDDGF81X56A543210",
     make: "Mercedes",
     model: "C300",
+    year: 2021,
     color: "White",
     status: "In Progress",
     date: "2024-01-11"
   },
   {
-    id: "RP006",
+    id: "RPT-006",
     customerName: "Diana Martinez",
-    customerContact: "+1 (555) 678-9012",
+    customerContact: "+973 33393144",
     plateNumber: "MNO-1234",
     chassisNumber: "WAUVC68T48A123456",
     make: "Audi",
     model: "A4",
+    year: 2022,
     color: "Gray",
     status: "Completed",
     date: "2024-01-10"
   },
   {
-    id: "RP007",
+    id: "RPT-007",
     customerName: "Edward Taylor",
-    customerContact: "+1 (555) 789-0123",
+    customerContact: "+973 33393145",
     plateNumber: "PQR-5678",
     chassisNumber: "JTHBJ46G775123456",
     make: "Lexus",
     model: "ES350",
+    year: 2020,
     color: "Gold",
     status: "Pending",
     date: "2024-01-09"
   },
   {
-    id: "RP008",
+    id: "RPT-008",
     customerName: "Fiona Davis",
-    customerContact: "+1 (555) 890-1234",
+    customerContact: "+973 33393146",
     plateNumber: "STU-9012",
     chassisNumber: "1HGCM82633A123456",
     make: "Honda",
     model: "Accord",
+    year: 2021,
     color: "Silver",
     status: "In Progress",
     date: "2024-01-08"
   },
   {
-    id: "RP009",
+    id: "RPT-009",
     customerName: "George Brown",
-    customerContact: "+1 (555) 901-2345",
+    customerContact: "+973 33393147",
     plateNumber: "VWX-3456",
     chassisNumber: "2T3BF4DV8BW098765",
     make: "Toyota",
     model: "RAV4",
+    year: 2023,
     color: "Blue",
     status: "Completed",
     date: "2024-01-07"
   },
   {
-    id: "RP010",
+    id: "RPT-010",
     customerName: "Helen Johnson",
-    customerContact: "+1 (555) 012-3456",
+    customerContact: "+973 33393148",
     plateNumber: "YZA-7890",
     chassisNumber: "1N4AA6AP7CC123456",
     make: "Nissan",
     model: "Altima",
+    year: 2022,
     color: "White",
     status: "Pending",
     date: "2024-01-06"
@@ -154,6 +167,28 @@ const getStatusColor = (status: string) => {
 export default function ReportsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
+  const [expandedRow, setExpandedRow] = useState<string | null>(null)
+
+  const handleViewReport = (id: string) => {
+    window.location.href = `/reports/${id}`
+  }
+
+  const handlePrintReport = (id: string) => {
+    toast.info(`Preparing print preview for report ${id}...`)
+    // In a real app, this would open print preview
+    setTimeout(() => {
+      window.open(`/reports/${id}`, '_blank')
+    }, 500)
+  }
+
+  const handleShareReport = (id: string) => {
+    toast.success(`Share dialog opened for report ${id}`)
+    // Mock share functionality
+  }
+
+  const toggleRowExpansion = (id: string) => {
+    setExpandedRow(expandedRow === id ? null : id)
+  }
 
   const filteredReports = mockReports.filter(report =>
     report.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -208,32 +243,86 @@ export default function ReportsPage() {
               </TableHeader>
               <TableBody>
                 {filteredReports.map((reportItem) => (
-                  <TableRow key={reportItem.id}>
-                    <TableCell className="font-medium">
-                      <a
-                        href={`/reports/${reportItem.id}`}
-                        className="text-primary hover:text-primary/80 underline"
-                      >
-                        {reportItem.id}
-                      </a>
-                    </TableCell>
-                    <TableCell>{reportItem.customerName}</TableCell>
-                    <TableCell>{reportItem.customerContact}</TableCell>
-                    <TableCell>{reportItem.plateNumber}</TableCell>
-                    <TableCell className="font-mono text-sm">{reportItem.chassisNumber}</TableCell>
-                    <TableCell>{reportItem.make}</TableCell>
-                    <TableCell>{reportItem.model}</TableCell>
-                    <TableCell>{reportItem.color}</TableCell>
-                    <TableCell>
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                          reportItem.status
-                        )}`}
-                      >
-                        {reportItem.status}
-                      </span>
-                    </TableCell>
-                  </TableRow>
+                  <React.Fragment key={reportItem.id}>
+                    <TableRow
+                      key={reportItem.id}
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() => toggleRowExpansion(reportItem.id)}
+                    >
+                      <TableCell className="font-medium">
+                        <div className="flex items-center gap-2">
+                          <ChevronDown
+                            className={`w-4 h-4 transition-transform ${
+                              expandedRow === reportItem.id ? 'rotate-180' : ''
+                            }`}
+                          />
+                          <span className="text-primary hover:text-primary/80">
+                            {reportItem.id}
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell>{reportItem.customerName}</TableCell>
+                      <TableCell>{reportItem.customerContact}</TableCell>
+                      <TableCell>{reportItem.plateNumber}</TableCell>
+                      <TableCell className="font-mono text-sm">{reportItem.chassisNumber}</TableCell>
+                      <TableCell>{reportItem.make}</TableCell>
+                      <TableCell>{reportItem.model}</TableCell>
+                      <TableCell>{reportItem.color}</TableCell>
+                      <TableCell>
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                            reportItem.status
+                          )}`}
+                        >
+                          {reportItem.status}
+                        </span>
+                      </TableCell>
+                    </TableRow>
+
+                    {expandedRow === reportItem.id && (
+                      <TableRow>
+                        <TableCell colSpan={9} className="p-0">
+                          <div className="m-4 p-4 bg-muted/50 rounded-lg">
+                            <div className="flex flex-wrap gap-3">
+                              <Button
+                                variant="default"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  handleViewReport(reportItem.id)
+                                }}
+                                className="flex items-center gap-2"
+                              >
+                                <Eye className="w-4 h-4" />
+                                View Report
+                              </Button>
+                              <Button
+                                variant="outline"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  handlePrintReport(reportItem.id)
+                                }}
+                                className="flex items-center gap-2"
+                              >
+                                <Printer className="w-4 h-4" />
+                                Print Report
+                              </Button>
+                              <Button
+                                variant="outline"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  handleShareReport(reportItem.id)
+                                }}
+                                className="flex items-center gap-2"
+                              >
+                                <Share2 className="w-4 h-4" />
+                                Share Report
+                              </Button>
+                            </div>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </React.Fragment>
                 ))}
               </TableBody>
             </Table>

@@ -47,7 +47,8 @@ const permissions = {
     'team:manage',
     'analytics:read',
     'users:manage',
-    'settings:read'
+    'settings:read',
+    'settings:manage'
   ],
   user: [
     'dashboard:read',
