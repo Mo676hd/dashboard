@@ -19,9 +19,8 @@ import {
   IconUsers,
 } from "@tabler/icons-react"
 
-import { NavDocuments } from "@/components/nav-documents"
-import { ProtectedNavMain } from "@/components/protected-nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
+import { CompanyLogo } from "@/components/company-logo"
+import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
@@ -42,7 +41,7 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/",
+      url: "/dashboard",
       icon: IconDashboard,
     },
     {
@@ -112,7 +111,7 @@ const data = {
   navSecondary: [
     {
       title: "Settings",
-      url: "#",
+      url: "/settings",
       icon: IconSettings,
     },
     {
@@ -155,16 +154,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="#">
-                <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Company Logo</span>
+              <a href="/dashboard">
+                <CompanyLogo />
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <ProtectedNavMain />
+        <NavMain />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

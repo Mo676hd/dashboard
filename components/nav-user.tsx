@@ -111,13 +111,17 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <IconUserCircle />
-                Account
+              <DropdownMenuItem asChild>
+                <a href="/account">
+                  <IconUserCircle />
+                  Account
+                </a>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <IconSettings />
-                Settings
+              <DropdownMenuItem asChild>
+                <a href="/settings">
+                  <IconSettings />
+                  Settings
+                </a>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

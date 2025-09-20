@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { NewReportDialog } from "@/components/new-report-dialog"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
@@ -12,7 +13,6 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Plus, Search } from "lucide-react"
-import { NewReportDialog } from "@/components/new-report-dialog"
 import { Input } from "@/components/ui/input"
 
 const mockReports = [
@@ -162,79 +162,84 @@ export default function ReportsPage() {
   )
 
   return (
-    <div>
-      <div className="flex flex-col gap-4 mb-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">Reports</h1>
-          <Button onClick={() => setIsDialogOpen(true)}>
-            <Plus className="w-4 h-4 mr-2" />
-            New Report
-          </Button>
-        </div>
-        <div className="relative max-w-md">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-          <Input
-            placeholder="Search by Report ID, Plate Number, or Customer Contact..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
+    <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+      <div className="px-4 lg:px-6">
+        <div className="flex flex-col gap-4">
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-bold tracking-tight">Reports</h1>
+            <Button onClick={() => setIsDialogOpen(true)}>
+              <Plus className="w-4 h-4 mr-2" />
+              New Report
+            </Button>
+          </div>
+          <p className="text-muted-foreground">
+            Manage all vehicle inspection reports
+          </p>
+          <div className="relative max-w-md">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+            <Input
+              placeholder="Search by Report ID, Plate Number, or Customer Contact..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
         </div>
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>All Reports</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Report ID</TableHead>
-                <TableHead>Customer Name</TableHead>
-                <TableHead>Contact Number</TableHead>
-                <TableHead>Plate Number</TableHead>
-                <TableHead>Chassis Number</TableHead>
-                <TableHead>Make</TableHead>
-                <TableHead>Model</TableHead>
-                <TableHead>Color</TableHead>
-                <TableHead>Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredReports.map((reportItem) => (
-                <TableRow key={reportItem.id}>
-                  <TableCell className="font-medium">
-                    <a
-                      href={`/reports/${reportItem.id}`}
-                      className="text-blue-600 hover:text-blue-800 underline"
-                    >
-                      {reportItem.id}
-                    </a>
-                  </TableCell>
-                  <TableCell>{reportItem.customerName}</TableCell>
-                  <TableCell>{reportItem.customerContact}</TableCell>
-                  <TableCell>{reportItem.plateNumber}</TableCell>
-                  <TableCell className="font-mono text-sm">{reportItem.chassisNumber}</TableCell>
-                  <TableCell>{reportItem.make}</TableCell>
-                  <TableCell>{reportItem.model}</TableCell>
-                  <TableCell>{reportItem.color}</TableCell>
-                  <TableCell>
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                        reportItem.status
-                      )}`}
-                    >
-                      {reportItem.status}
-                    </span>
-                  </TableCell>
+      <div className="px-4 lg:px-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>All Reports</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Report ID</TableHead>
+                  <TableHead>Customer Name</TableHead>
+                  <TableHead>Contact Number</TableHead>
+                  <TableHead>Plate Number</TableHead>
+                  <TableHead>Chassis Number</TableHead>
+                  <TableHead>Make</TableHead>
+                  <TableHead>Model</TableHead>
+                  <TableHead>Color</TableHead>
+                  <TableHead>Status</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-
+              </TableHeader>
+              <TableBody>
+                {filteredReports.map((reportItem) => (
+                  <TableRow key={reportItem.id}>
+                    <TableCell className="font-medium">
+                      <a
+                        href={`/reports/${reportItem.id}`}
+                        className="text-primary hover:text-primary/80 underline"
+                      >
+                        {reportItem.id}
+                      </a>
+                    </TableCell>
+                    <TableCell>{reportItem.customerName}</TableCell>
+                    <TableCell>{reportItem.customerContact}</TableCell>
+                    <TableCell>{reportItem.plateNumber}</TableCell>
+                    <TableCell className="font-mono text-sm">{reportItem.chassisNumber}</TableCell>
+                    <TableCell>{reportItem.make}</TableCell>
+                    <TableCell>{reportItem.model}</TableCell>
+                    <TableCell>{reportItem.color}</TableCell>
+                    <TableCell>
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                          reportItem.status
+                        )}`}
+                      >
+                        {reportItem.status}
+                      </span>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
       <NewReportDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
     </div>
   )

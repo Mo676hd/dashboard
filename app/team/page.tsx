@@ -94,104 +94,112 @@ const getStatusBadgeColor = (status: string) => {
 export default function TeamPage() {
   return (
     <PageProtection requiredPermissions={["team:read"]}>
-      <div className="flex flex-col gap-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Team</h1>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              Total Team Members
-            </CardTitle>
-            <div className="text-2xl">👥</div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{mockTeam.length}</div>
-            <p className="text-xs text-muted-foreground">
-              {mockTeam.filter(member => member.status === "Active").length} active
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              Super Users
-            </CardTitle>
-            <div className="text-2xl">👑</div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {mockTeam.filter(member => member.role === "Super User").length}
+      <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+        <div className="px-4 lg:px-6">
+          <div className="flex flex-col gap-4">
+            <div className="flex justify-between items-center">
+              <h1 className="text-2xl font-bold tracking-tight">Team</h1>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Administrators
+            <p className="text-muted-foreground">
+              Manage staff members and roles
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
+        <div className="px-4 lg:px-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Total Team Members
+                </CardTitle>
+                <div className="text-2xl">👥</div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{mockTeam.length}</div>
+                <p className="text-xs text-muted-foreground">
+                  {mockTeam.filter(member => member.status === "Active").length} active
+                </p>
+              </CardContent>
+            </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              Service Advisors
-            </CardTitle>
-            <div className="text-2xl">🔧</div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {mockTeam.filter(member => member.role === "Service Advisor").length}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Frontline staff
-            </p>
-          </CardContent>
-        </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Super Users
+                </CardTitle>
+                <div className="text-2xl">👑</div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {mockTeam.filter(member => member.role === "Super User").length}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Administrators
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Service Advisors
+                </CardTitle>
+                <div className="text-2xl">🔧</div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {mockTeam.filter(member => member.role === "Service Advisor").length}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Frontline staff
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Team Members</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Role</TableHead>
+                    <TableHead>Department</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Join Date</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {mockTeam.map((member) => (
+                    <TableRow key={member.id}>
+                      <TableCell className="font-medium">
+                        {member.name}
+                      </TableCell>
+                      <TableCell>{member.email}</TableCell>
+                      <TableCell>
+                        <Badge className={getRoleBadgeColor(member.role)}>
+                          {member.role}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>{member.department}</TableCell>
+                      <TableCell>
+                        <Badge className={getStatusBadgeColor(member.status)}>
+                          {member.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>{new Date(member.joinDate).toLocaleDateString()}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </div>
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Team Members</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead>Department</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Join Date</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {mockTeam.map((member) => (
-                <TableRow key={member.id}>
-                  <TableCell className="font-medium">
-                    {member.name}
-                  </TableCell>
-                  <TableCell>{member.email}</TableCell>
-                  <TableCell>
-                    <Badge className={getRoleBadgeColor(member.role)}>
-                      {member.role}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{member.department}</TableCell>
-                  <TableCell>
-                    <Badge className={getStatusBadgeColor(member.status)}>
-                      {member.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{member.joinDate}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-    </div>
     </PageProtection>
   )
 }

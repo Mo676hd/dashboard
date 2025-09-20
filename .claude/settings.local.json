@@ -5,7 +5,8 @@
       "Bash(npx shadcn@latest init:*)",
       "Bash(npx shadcn@latest add:*)",
       "Bash(mkdir:*)",
-      "Bash(ren:*)"
+      "Bash(ren:*)",
+      "Bash(rm:*)"
     ],
     "deny": [],
     "ask": []
