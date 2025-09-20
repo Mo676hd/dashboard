@@ -75,45 +75,54 @@ export default function ReportDetailPage({ params }: { params: { id: string } })
         </h1>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm font-medium">Customer</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-lg font-semibold">{mockReport.customerName}</p>
-            <p className="text-sm text-gray-600">{mockReport.contact}</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm font-medium">Vehicle</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-lg font-semibold">{mockReport.carMakeModel}</p>
-            <p className="text-sm text-gray-600">{mockReport.color} • {mockReport.plateNumber}</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm font-medium">Status</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Select value={status} onValueChange={setStatus}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Pending">Pending</SelectItem>
-                <SelectItem value="In Progress">In Progress</SelectItem>
-                <SelectItem value="Completed">Completed</SelectItem>
-              </SelectContent>
-            </Select>
-          </CardContent>
-        </Card>
-      </div>
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle className="text-lg">Report Details</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div>
+              <h3 className="text-sm font-medium text-gray-500 mb-2">Report ID</h3>
+              <p className="text-lg font-semibold">{mockReport.id}</p>
+            </div>
+            <div>
+              <h3 className="text-sm font-medium text-gray-500 mb-2">Customer</h3>
+              <p className="text-lg font-semibold">{mockReport.customerName}</p>
+              <p className="text-sm text-gray-600">{mockReport.contact}</p>
+            </div>
+            <div>
+              <h3 className="text-sm font-medium text-gray-500 mb-2">Vehicle</h3>
+              <p className="text-lg font-semibold">{mockReport.carMakeModel}</p>
+              <p className="text-sm text-gray-600">{mockReport.color} • {mockReport.plateNumber}</p>
+            </div>
+            <div>
+              <h3 className="text-sm font-medium text-gray-500 mb-2">Status</h3>
+              <Select value={status} onValueChange={setStatus}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Pending">Pending</SelectItem>
+                  <SelectItem value="In Progress">In Progress</SelectItem>
+                  <SelectItem value="Completed">Completed</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h3 className="text-sm font-medium text-gray-500 mb-2">Report Date</h3>
+                <p className="text-sm font-medium">{mockReport.date}</p>
+              </div>
+              <div>
+                <h3 className="text-sm font-medium text-gray-500 mb-2">Last Updated</h3>
+                <p className="text-sm font-medium">{mockReport.date}</p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <Tabs defaultValue="images" className="space-y-4">
         <TabsList>

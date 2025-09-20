@@ -17,6 +17,7 @@ import { Plus, Search, Eye, Printer, Share2, ChevronDown } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
+import { ShareReportDialog } from "@/components/share-report-dialog"
 
 const mockReports = [
   {
@@ -168,6 +169,8 @@ export default function ReportsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
   const [expandedRow, setExpandedRow] = useState<string | null>(null)
+  const [shareDialogOpen, setShareDialogOpen] = useState(false)
+  const [selectedReportId, setSelectedReportId] = useState<string | null>(null)
 
   const handleViewReport = (id: string) => {
     window.location.href = `/reports/${id}`
@@ -182,8 +185,8 @@ export default function ReportsPage() {
   }
 
   const handleShareReport = (id: string) => {
-    toast.success(`Share dialog opened for report ${id}`)
-    // Mock share functionality
+    setSelectedReportId(id)
+    setShareDialogOpen(true)
   }
 
   const toggleRowExpansion = (id: string) => {
@@ -252,7 +255,7 @@ export default function ReportsPage() {
                       <TableCell className="font-medium">
                         <div className="flex items-center gap-2">
                           <ChevronDown
-                            className={`w-4 h-4 transition-transform ${
+                            className={`w-4 h-4 transition-transform duration-300 ${
                               expandedRow === reportItem.id ? 'rotate-180' : ''
                             }`}
                           />
@@ -279,13 +282,20 @@ export default function ReportsPage() {
                       </TableCell>
                     </TableRow>
 
-                    {expandedRow === reportItem.id && (
-                      <TableRow>
-                        <TableCell colSpan={9} className="p-0">
-                          <div className="m-4 p-4 bg-muted/50 rounded-lg">
-                            <div className="flex flex-wrap gap-3">
+                    <TableRow>
+                      <TableCell colSpan={9} className="p-0">
+                        <div
+                          className="overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] origin-top"
+                          style={{
+                            maxHeight: expandedRow === reportItem.id ? '200px' : '0px',
+                            opacity: expandedRow === reportItem.id ? 1 : 0,
+                            transform: expandedRow === reportItem.id ? 'translateY(0)' : 'translateY(-10px)'
+                          }}
+                        >
+                          <div className="p-4 bg-muted/30">
+                            <div className="flex gap-2">
                               <Button
-                                variant="default"
+                                size="sm"
                                 onClick={(e) => {
                                   e.stopPropagation()
                                   handleViewReport(reportItem.id)
@@ -293,9 +303,10 @@ export default function ReportsPage() {
                                 className="flex items-center gap-2"
                               >
                                 <Eye className="w-4 h-4" />
-                                View Report
+                                View
                               </Button>
                               <Button
+                                size="sm"
                                 variant="outline"
                                 onClick={(e) => {
                                   e.stopPropagation()
@@ -304,9 +315,10 @@ export default function ReportsPage() {
                                 className="flex items-center gap-2"
                               >
                                 <Printer className="w-4 h-4" />
-                                Print Report
+                                Print
                               </Button>
                               <Button
+                                size="sm"
                                 variant="outline"
                                 onClick={(e) => {
                                   e.stopPropagation()
@@ -315,13 +327,13 @@ export default function ReportsPage() {
                                 className="flex items-center gap-2"
                               >
                                 <Share2 className="w-4 h-4" />
-                                Share Report
+                                Share
                               </Button>
                             </div>
                           </div>
-                        </TableCell>
-                      </TableRow>
-                    )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
                   </React.Fragment>
                 ))}
               </TableBody>
@@ -330,6 +342,11 @@ export default function ReportsPage() {
         </Card>
       </div>
       <NewReportDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
+      <ShareReportDialog
+        open={shareDialogOpen}
+        onOpenChange={setShareDialogOpen}
+        reportId={selectedReportId || ""}
+      />
     </div>
   )
 }
