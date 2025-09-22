@@ -8,20 +8,16 @@ import { Label } from "@/components/ui/label"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { Switch } from "@/components/ui/switch"
 import { toast } from "sonner"
 import {
   User,
   Mail,
-  Shield,
   Key,
-  Bell,
-  Smartphone,
-  History,
   Activity,
   LogOut,
 } from "lucide-react"
 import { useAuth } from "@/lib/auth"
+import { ActivityLogTab } from "@/components/ActivityLogTab"
 
 export default function AccountPage() {
   const { user, logout } = useAuth()
@@ -31,9 +27,7 @@ export default function AccountPage() {
   const [newPassword, setNewPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [isEditing, setIsEditing] = useState(false)
-  const [emailNotifications, setEmailNotifications] = useState(true)
-  const [pushNotifications, setPushNotifications] = useState(false)
-
+  
   const handleSaveProfile = () => {
     toast.success("Profile updated successfully!")
     setIsEditing(false)
@@ -67,24 +61,47 @@ export default function AccountPage() {
     })
   }
 
-  const activityLogs = [
+  const accountActivities = [
     {
-      id: 1,
-      action: "Logged in",
-      date: "2024-01-20T10:30:00Z",
-      device: "Chrome on Windows"
+      status: "Completed",
+      date: "2024-01-20 10:30 AM",
+      description: "Logged in from Chrome on Windows"
     },
     {
-      id: 2,
-      action: "Changed password",
-      date: "2024-01-15T14:20:00Z",
-      device: "Safari on iPhone"
+      status: "Completed",
+      date: "2024-01-15 2:20 PM",
+      description: "Changed password successfully"
     },
     {
-      id: 3,
-      action: "Updated profile",
-      date: "2024-01-10T09:15:00Z",
-      device: "Chrome on Windows"
+      status: "Completed",
+      date: "2024-01-10 9:15 AM",
+      description: "Profile information updated"
+    },
+    {
+      status: "In Progress",
+      date: "2024-01-08 4:45 PM",
+      description: "Email notifications configured",
+      isActive: true
+    },
+    {
+      status: "Completed",
+      date: "2024-01-05 11:30 AM",
+      description: "Two-factor authentication enabled"
+    },
+    {
+      status: "Completed",
+      date: "2023-12-20 3:15 PM",
+      description: "Account recovery options set up"
+    },
+    {
+      status: "Completed",
+      date: "2023-12-15 8:20 AM",
+      description: "Privacy settings updated"
+    },
+    {
+      status: "Completed",
+      date: "2023-06-01 8:00 AM",
+      description: "Account created successfully"
     }
   ]
 
@@ -257,67 +274,7 @@ export default function AccountPage() {
               </CardContent>
             </Card>
 
-            <Card className="mt-6">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Bell className="w-5 h-5" />
-                  Notifications
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Mail className="w-4 h-4" />
-                    <div>
-                      <p className="font-medium">Email Notifications</p>
-                      <p className="text-sm text-muted-foreground">Receive email updates</p>
-                    </div>
-                  </div>
-                  <Switch
-                    checked={emailNotifications}
-                    onCheckedChange={setEmailNotifications}
-                  />
-                </div>
-                <Separator />
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Smartphone className="w-4 h-4" />
-                    <div>
-                      <p className="font-medium">Push Notifications</p>
-                      <p className="text-sm text-muted-foreground">Receive push notifications</p>
-                    </div>
-                  </div>
-                  <Switch
-                    checked={pushNotifications}
-                    onCheckedChange={setPushNotifications}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="mt-6">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <History className="w-5 h-5" />
-                  Recent Activity
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {activityLogs.map((log) => (
-                    <div key={log.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                      <div>
-                        <p className="font-medium">{log.action}</p>
-                        <p className="text-sm text-muted-foreground">{log.device}</p>
-                      </div>
-                      <span className="text-xs text-muted-foreground">
-                        {formatDate(log.date)}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            <ActivityLogTab activities={accountActivities} />
           </div>
         </div>
       </div>

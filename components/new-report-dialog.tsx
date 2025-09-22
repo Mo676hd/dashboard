@@ -57,11 +57,10 @@ export function NewReportDialog({ open, onOpenChange }: NewReportDialogProps) {
     make: "",
     model: "",
     year: "",
-    color: "",
     images: [] as File[]
   })
 
-  const availableYears = Array.from({ length: 36 }, (_, i) => (2024 - i).toString())
+  const availableYears = Array.from({ length: new Date().getFullYear() - 1989 }, (_, i) => (new Date().getFullYear() - i).toString())
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -76,7 +75,6 @@ export function NewReportDialog({ open, onOpenChange }: NewReportDialogProps) {
       make: "",
       model: "",
       year: "",
-      color: "",
       images: []
     })
     onOpenChange(false)

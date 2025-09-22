@@ -2,25 +2,18 @@
 
 import * as React from "react"
 import {
-  IconCamera,
-  IconChartBar,
-  IconDashboard,
-  IconDatabase,
-  IconFileAi,
-  IconFileDescription,
-  IconFileWord,
-  IconFolder,
-  IconHelp,
-  IconInnerShadowTop,
-  IconListDetails,
-  IconReport,
-  IconSearch,
-  IconSettings,
-  IconUsers,
-} from "@tabler/icons-react"
+  Home,
+  FileText,
+  Users,
+  BarChart3,
+  Settings,
+  HelpCircle,
+} from "lucide-react"
 
 import { CompanyLogo } from "@/components/company-logo"
 import { NavMain } from "@/components/nav-main"
+import { NavSecondary } from "@/components/nav-secondary"
+import { useAuth } from "@/lib/auth"
 import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
@@ -32,119 +25,68 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
-const data = {
-  user: {
-    name: "John Doe",
-    email: "john@example.com",
-    avatar: "/avatars/user.jpg",
-  },
-  navMain: [
+const getNavData = (userRole: string) => {
+  const baseNav = [
     {
       title: "Dashboard",
       url: "/dashboard",
-      icon: IconDashboard,
+      icon: Home,
+      permission: "dashboard"
     },
     {
       title: "Reports",
       url: "/reports",
-      icon: IconReport,
+      icon: FileText,
+      permission: "reports"
     },
+  ]
+
+  const superuserNav = [
+    ...baseNav,
     {
       title: "Team",
       url: "/team",
-      icon: IconUsers,
+      icon: Users,
+      permission: "team"
     },
     {
       title: "Analytics",
       url: "/analytics",
-      icon: IconChartBar,
+      icon: BarChart3,
+      permission: "analytics"
     },
-  ],
-  navClouds: [
-    {
-      title: "Capture",
-      icon: IconCamera,
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: IconFileDescription,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: IconFileAi,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  navSecondary: [
+  ]
+
+  const navSecondary = [
     {
       title: "Settings",
       url: "/settings",
-      icon: IconSettings,
+      icon: Settings,
+      permission: "settings"
     },
     {
-      title: "Get Help",
-      url: "#",
-      icon: IconHelp,
+      title: "Account",
+      url: "/account",
+      icon: HelpCircle,
+      permission: "account"
     },
-    {
-      title: "Search",
-      url: "#",
-      icon: IconSearch,
-    },
-  ],
-  documents: [
-    {
-      name: "Data Library",
-      url: "#",
-      icon: IconDatabase,
-    },
-    {
-      name: "Reports",
-      url: "#",
-      icon: IconReport,
-    },
-    {
-      name: "Word Assistant",
-      url: "#",
-      icon: IconFileWord,
-    },
-  ],
+  ]
+
+  return {
+    navMain: userRole === 'superuser' ? superuserNav : baseNav,
+    navSecondary: navSecondary.filter(item =>
+      userRole === 'superuser' || item.permission === 'account'
+    )
+  }
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user } = useAuth()
+
+  if (!user) return null
+
+  const navData = getNavData(user.role)
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -162,10 +104,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain />
+        <NavMain items={navData.navMain} />
+        <NavSecondary items={navData.navSecondary} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={{...user, avatar: user.avatar || '/avatars/user.jpg'}} />
       </SidebarFooter>
     </Sidebar>
   )

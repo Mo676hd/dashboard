@@ -9,10 +9,11 @@ import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
+import { Checkbox } from "@/components/ui/checkbox"
 import { toast } from "sonner"
 import { PageProtection } from "@/components/page-protection"
+import Link from "next/link"
 import {
-  Settings,
   Palette,
   Bell,
   FileText,
@@ -22,6 +23,8 @@ import {
   Moon,
   Sun,
   Globe,
+  Mail,
+  MessageSquare,
 } from "lucide-react"
 
 export default function SettingsPage() {
@@ -29,6 +32,18 @@ export default function SettingsPage() {
   const [emailNotifications, setEmailNotifications] = useState(true)
   const [pushNotifications, setPushNotifications] = useState(false)
   const [defaultReportTemplate, setDefaultReportTemplate] = useState("standard")
+
+  // Notification settings
+  const [notificationSettings, setNotificationSettings] = useState({
+    emailNewReports: true,
+    emailReportUpdates: true,
+    emailSystemAlerts: true,
+    emailWeeklyDigest: false,
+    pushNewReports: true,
+    pushReportUpdates: true,
+    pushSystemAlerts: true,
+    pushReminders: false,
+  })
 
   const mockUsers = [
     { id: 1, name: "John Smith", email: "john@company.com", role: "Admin" },
@@ -48,12 +63,16 @@ export default function SettingsPage() {
     toast.info("Data import feature coming soon!")
   }
 
-  const handleManageUsers = () => {
-    toast.info("User management would open here")
+  const handleNotificationChange = (key: string, checked: boolean) => {
+    setNotificationSettings(prev => ({
+      ...prev,
+      [key]: checked
+    }))
   }
 
+  
   return (
-    <PageProtection requiredPermissions={["settings:manage"]}>
+    <PageProtection requiredRoute="settings">
       <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
         <div className="px-4 lg:px-6">
           <div className="flex justify-between items-center">
@@ -129,47 +148,216 @@ export default function SettingsPage() {
             </Card>
 
             {/* Notification Settings */}
-            <Card>
+            <Card className="lg:col-span-2">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Bell className="w-5 h-5" />
-                  Global Notifications
+                  Notification Preferences
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Email Notifications</p>
-                    <p className="text-sm text-muted-foreground">System-wide email alerts</p>
+              <CardContent className="space-y-6">
+                {/* Master Toggles */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <Mail className="w-5 h-5 text-blue-600" />
+                      <div>
+                        <p className="font-medium">Email Notifications</p>
+                        <p className="text-sm text-muted-foreground">Receive alerts via email</p>
+                      </div>
+                    </div>
+                    <Switch
+                      checked={emailNotifications}
+                      onCheckedChange={setEmailNotifications}
+                    />
                   </div>
-                  <Switch
-                    checked={emailNotifications}
-                    onCheckedChange={setEmailNotifications}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Push Notifications</p>
-                    <p className="text-sm text-muted-foreground">Real-time notifications</p>
+                  <div className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <MessageSquare className="w-5 h-5 text-green-600" />
+                      <div>
+                        <p className="font-medium">Push Notifications</p>
+                        <p className="text-sm text-muted-foreground">Real-time browser alerts</p>
+                      </div>
+                    </div>
+                    <Switch
+                      checked={pushNotifications}
+                      onCheckedChange={setPushNotifications}
+                    />
                   </div>
-                  <Switch
-                    checked={pushNotifications}
-                    onCheckedChange={setPushNotifications}
-                  />
                 </div>
+
                 <Separator />
-                <div className="space-y-2">
-                  <Label>Notification Frequency</Label>
-                  <Select defaultValue="immediate">
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="immediate">Immediate</SelectItem>
-                      <SelectItem value="hourly">Hourly Digest</SelectItem>
-                      <SelectItem value="daily">Daily Digest</SelectItem>
-                    </SelectContent>
-                  </Select>
+
+                {/* Email Notification Preferences */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <Mail className="w-4 h-4 text-blue-600" />
+                    <Label className="font-medium">Email Notification Types</Label>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="email-new-reports"
+                        checked={notificationSettings.emailNewReports}
+                        onCheckedChange={(checked) => handleNotificationChange("emailNewReports", checked as boolean)}
+                        disabled={!emailNotifications}
+                      />
+                      <div className="grid gap-1.5 leading-none">
+                        <Label
+                          htmlFor="email-new-reports"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          New Reports
+                        </Label>
+                        <p className="text-xs text-muted-foreground">
+                          Get notified when new reports are created
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="email-report-updates"
+                        checked={notificationSettings.emailReportUpdates}
+                        onCheckedChange={(checked) => handleNotificationChange("emailReportUpdates", checked as boolean)}
+                        disabled={!emailNotifications}
+                      />
+                      <div className="grid gap-1.5 leading-none">
+                        <Label
+                          htmlFor="email-report-updates"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          Report Updates
+                        </Label>
+                        <p className="text-xs text-muted-foreground">
+                          Changes to existing reports
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="email-system-alerts"
+                        checked={notificationSettings.emailSystemAlerts}
+                        onCheckedChange={(checked) => handleNotificationChange("emailSystemAlerts", checked as boolean)}
+                        disabled={!emailNotifications}
+                      />
+                      <div className="grid gap-1.5 leading-none">
+                        <Label
+                          htmlFor="email-system-alerts"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          System Alerts
+                        </Label>
+                        <p className="text-xs text-muted-foreground">
+                          Important system notifications
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="email-weekly-digest"
+                        checked={notificationSettings.emailWeeklyDigest}
+                        onCheckedChange={(checked) => handleNotificationChange("emailWeeklyDigest", checked as boolean)}
+                        disabled={!emailNotifications}
+                      />
+                      <div className="grid gap-1.5 leading-none">
+                        <Label
+                          htmlFor="email-weekly-digest"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          Weekly Digest
+                        </Label>
+                        <p className="text-xs text-muted-foreground">
+                          Summary of weekly activity
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Push Notification Preferences */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4 text-green-600" />
+                    <Label className="font-medium">Push Notification Types</Label>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="push-new-reports"
+                        checked={notificationSettings.pushNewReports}
+                        onCheckedChange={(checked) => handleNotificationChange("pushNewReports", checked as boolean)}
+                        disabled={!pushNotifications}
+                      />
+                      <div className="grid gap-1.5 leading-none">
+                        <Label
+                          htmlFor="push-new-reports"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          New Reports
+                        </Label>
+                        <p className="text-xs text-muted-foreground">
+                          Instant notifications for new reports
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="push-report-updates"
+                        checked={notificationSettings.pushReportUpdates}
+                        onCheckedChange={(checked) => handleNotificationChange("pushReportUpdates", checked as boolean)}
+                        disabled={!pushNotifications}
+                      />
+                      <div className="grid gap-1.5 leading-none">
+                        <Label
+                          htmlFor="push-report-updates"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          Report Updates
+                        </Label>
+                        <p className="text-xs text-muted-foreground">
+                          Real-time report changes
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="push-system-alerts"
+                        checked={notificationSettings.pushSystemAlerts}
+                        onCheckedChange={(checked) => handleNotificationChange("pushSystemAlerts", checked as boolean)}
+                        disabled={!pushNotifications}
+                      />
+                      <div className="grid gap-1.5 leading-none">
+                        <Label
+                          htmlFor="push-system-alerts"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          System Alerts
+                        </Label>
+                        <p className="text-xs text-muted-foreground">
+                          Critical system notifications
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="push-reminders"
+                        checked={notificationSettings.pushReminders}
+                        onCheckedChange={(checked) => handleNotificationChange("pushReminders", checked as boolean)}
+                        disabled={!pushNotifications}
+                      />
+                      <div className="grid gap-1.5 leading-none">
+                        <Label
+                          htmlFor="push-reminders"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          Reminders
+                        </Label>
+                        <p className="text-xs text-muted-foreground">
+                          Task and deadline reminders
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -179,7 +367,7 @@ export default function SettingsPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <FileText className="w-5 h-5" />
-                  Report Templates
+                  Report Configuration
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -187,25 +375,66 @@ export default function SettingsPage() {
                   <Label htmlFor="template">Default Report Template</Label>
                   <Select value={defaultReportTemplate} onValueChange={setDefaultReportTemplate}>
                     <SelectTrigger>
-                      <SelectValue />
+                      <SelectValue placeholder="Select default template" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="standard">Standard Inspection</SelectItem>
-                      <SelectItem value="detailed">Detailed Analysis</SelectItem>
-                      <SelectItem value="summary">Quick Summary</SelectItem>
+                      <SelectItem value="standard">Standard Inspection Report</SelectItem>
+                      <SelectItem value="detailed">Detailed Analysis Report</SelectItem>
+                      <SelectItem value="summary">Quick Summary Report</SelectItem>
+                      <SelectItem value="comprehensive">Comprehensive Assessment</SelectItem>
                     </SelectContent>
                   </Select>
+                  <p className="text-xs text-muted-foreground">
+                    This template will be pre-selected when creating new reports
+                  </p>
                 </div>
 
+                <Separator />
+
                 <div className="space-y-3">
-                  <Button variant="outline" className="w-full justify-start">
-                    <FileText className="w-4 h-4 mr-2" />
-                    Manage Templates
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start">
-                    <FileText className="w-4 h-4 mr-2" />
-                    Create New Template
-                  </Button>
+                  <Label>Template Management</Label>
+                  <div className="grid grid-cols-1 gap-2">
+                    <Button variant="outline" className="w-full justify-start">
+                      <FileText className="w-4 h-4 mr-2" />
+                      Manage Existing Templates
+                    </Button>
+                    <Button variant="outline" className="w-full justify-start">
+                      <FileText className="w-4 h-4 mr-2" />
+                      Create Custom Template
+                    </Button>
+                    <Button variant="outline" className="w-full justify-start">
+                      <FileText className="w-4 h-4 mr-2" />
+                      Import Template
+                    </Button>
+                  </div>
+                </div>
+
+                <Separator />
+
+                <div className="space-y-3">
+                  <Label>Auto-numbering Settings</Label>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-2">
+                      <Label htmlFor="prefix" className="text-sm">Report Prefix</Label>
+                      <Input id="prefix" placeholder="RPT" defaultValue="RPT" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="separator" className="text-sm">Separator</Label>
+                      <Select defaultValue="-">
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="-">Hyphen (-)</SelectItem>
+                          <SelectItem value="_">Underscore (_)</SelectItem>
+                          <SelectItem value="/">Slash (/)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Example: RPT-001, RPT-002, RPT-003...
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -233,9 +462,12 @@ export default function SettingsPage() {
                   ))}
                 </div>
 
-                <Button onClick={handleManageUsers} className="w-full">
-                  Manage All Users
-                </Button>
+                <Link href="/team">
+                  <Button className="w-full">
+                    <Users className="w-4 h-4 mr-2" />
+                    Manage All Users
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
 

@@ -19,43 +19,8 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
-export function NavMain() {
+export function NavMain({ items }: { items: any[] }) {
   const pathname = usePathname()
-  const { user } = useAuth()
-
-  const items = [
-    {
-      title: "Dashboard",
-      url: "/dashboard",
-      icon: Home,
-    },
-    {
-      title: "Reports",
-      url: "/reports",
-      icon: FileText,
-    },
-  ]
-
-  // Add admin-only items
-  if (user?.role === 'superuser') {
-    items.push(
-      {
-        title: "Team",
-        url: "/team",
-        icon: Users,
-      },
-      {
-        title: "Analytics",
-        url: "/analytics",
-        icon: BarChart3,
-      },
-      {
-        title: "Settings",
-        url: "/settings",
-        icon: Settings,
-      }
-    )
-  }
 
   return (
     <SidebarMenu>

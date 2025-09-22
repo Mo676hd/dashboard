@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/table"
 import { Plus, Search, Eye, Printer, Share2, ChevronDown } from "lucide-react"
 import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
 import { ShareReportDialog } from "@/components/share-report-dialog"
 
@@ -292,7 +291,8 @@ export default function ReportsPage() {
                             transform: expandedRow === reportItem.id ? 'translateY(0)' : 'translateY(-10px)'
                           }}
                         >
-                          <div className="p-4 bg-muted/30">
+                          <Card className="m-4">
+                          <CardContent className="p-4">
                             <div className="flex gap-2">
                               <Button
                                 size="sm"
@@ -330,7 +330,8 @@ export default function ReportsPage() {
                                 Share
                               </Button>
                             </div>
-                          </div>
+                          </CardContent>
+                          </Card>
                         </div>
                       </TableCell>
                     </TableRow>
