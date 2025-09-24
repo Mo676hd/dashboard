@@ -9,6 +9,7 @@ export interface User {
   name: string
   email: string
   role: UserRole
+  avatar?: string
 }
 
 interface AuthContextType {
@@ -16,6 +17,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<boolean>
   logout: () => void
   hasPermission: (permission: string) => boolean
+  switchRole: (role: UserRole) => void
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -36,26 +38,10 @@ const mockUsers: User[] = [
   }
 ]
 
-// Permission definitions
+// Permission definitions - simplified for route-based access
 const permissions = {
-  superuser: [
-    'dashboard:read',
-    'reports:read',
-    'reports:create',
-    'reports:edit',
-    'team:read',
-    'team:manage',
-    'analytics:read',
-    'users:manage',
-    'settings:read',
-    'settings:manage'
-  ],
-  user: [
-    'dashboard:read',
-    'reports:read',
-    'reports:create',
-    'reports:edit'
-  ]
+  superuser: ['dashboard', 'reports', 'team', 'analytics', 'settings', 'account'],
+  user: ['dashboard', 'reports', 'account']
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -87,8 +73,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return permissions[user.role].includes(permission)
   }
 
+  const switchRole = (role: UserRole) => {
+    const mockUser = mockUsers.find(u => u.role === role)
+    if (mockUser) {
+      setUser(mockUser)
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, hasPermission }}>
+    <AuthContext.Provider value={{ user, login, logout, hasPermission, switchRole }}>
       {children}
     </AuthContext.Provider>
   )

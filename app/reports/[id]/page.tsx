@@ -11,7 +11,6 @@ import { ReportHeader } from "@/components/ReportHeader"
 import { TabNavigation } from "@/components/TabNavigation"
 import { PhotosTab } from "@/components/PhotosTab"
 import { DamageAssessmentTab } from "@/components/DamageAssessmentTab"
-import { RemarksTab } from "@/components/RemarksTab"
 import { ActivityLogTab } from "@/components/ActivityLogTab"
 
 const mockReport = {
@@ -62,6 +61,10 @@ export default function ReportDetailPage({ params }: { params: { id: string } })
     <p><em>Use this editor to add corrections, additional remarks, or override AI-generated content.</em></p>
   `)
 
+  const handleSaveRemarks = () => {
+    toast.success("Remarks saved successfully!")
+  }
+
   const handleUploadPhotos = () => {
     toast.success("Photo upload functionality would be implemented here")
   }
@@ -73,7 +76,20 @@ export default function ReportDetailPage({ params }: { params: { id: string } })
       case "photos":
         return <PhotosTab images={mockImages} onUploadPhotos={handleUploadPhotos} />
       case "remarks":
-        return <RemarksTab remarks={remarks} onRemarksChange={setRemarks} />
+        return (
+          <div className="space-y-4">
+            <RichTextEditor
+              content={remarks}
+              onChange={setRemarks}
+              placeholder="Add your remarks, corrections, or additional notes here..."
+            />
+            <div className="flex justify-end">
+              <Button onClick={handleSaveRemarks}>
+                Save Remarks
+              </Button>
+            </div>
+          </div>
+        )
       case "activity":
         return <ActivityLogTab activities={mockActivities} />
       default:

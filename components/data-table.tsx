@@ -21,19 +21,19 @@ import {
 } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import {
-  IconChevronDown,
-  IconChevronLeft,
-  IconChevronRight,
-  IconChevronsLeft,
-  IconChevronsRight,
-  IconCircleCheckFilled,
-  IconDotsVertical,
-  IconGripVertical,
-  IconLayoutColumns,
-  IconLoader,
-  IconPlus,
-  IconTrendingUp,
-} from "@tabler/icons-react"
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+  CircleCheck,
+  MoreVertical,
+  GripVertical,
+  LayoutGrid,
+  Loader,
+  Plus,
+  TrendingUp,
+} from "lucide-react"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -132,7 +132,7 @@ function DragHandle({ id }: { id: string }) {
       size="icon"
       className="text-muted-foreground size-7 hover:bg-transparent"
     >
-      <IconGripVertical className="text-muted-foreground size-3" />
+      <GripVertical className="text-muted-foreground h-3 w-3" />
       <span className="sr-only">Drag to reorder</span>
     </Button>
   )
@@ -237,7 +237,7 @@ export function DataTable({
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
+                <TableHead key={header.id} className="font-semibold">
                   {header.isPlaceholder
                     ? null
                     : flexRender(
@@ -258,7 +258,7 @@ export function DataTable({
             <TableRow>
               <TableCell
                 colSpan={columns.length}
-                className="h-24 text-center"
+                className="h-24 text-center text-muted-foreground"
               >
                 No results.
               </TableCell>

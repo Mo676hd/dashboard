@@ -6,11 +6,11 @@ import { useEffect, useState } from "react"
 
 interface PageProtectionProps {
   children: React.ReactNode
-  requiredPermissions: string[]
+  requiredRoute: string
   redirectTo?: string
 }
 
-export function PageProtection({ children, requiredPermissions, redirectTo = "/" }: PageProtectionProps) {
+export function PageProtection({ children, requiredRoute, redirectTo = "/" }: PageProtectionProps) {
   const { user, hasPermission } = useAuth()
   const [isChecking, setIsChecking] = useState(true)
 
@@ -43,9 +43,9 @@ export function PageProtection({ children, requiredPermissions, redirectTo = "/"
     )
   }
 
-  const hasAllPermissions = requiredPermissions.every(permission => hasPermission(permission))
+  const hasPermissionForRoute = hasPermission(requiredRoute)
 
-  if (!hasAllPermissions) {
+  if (!hasPermissionForRoute) {
     return (
       <AccessDenied
         title="Access Denied"

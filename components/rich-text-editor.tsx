@@ -29,7 +29,7 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
     },
     editorProps: {
       attributes: {
-        class: 'min-h-[200px] p-4 border rounded-md prose prose-sm max-w-none focus:outline-none focus:ring-2 focus:ring-blue-500',
+        class: 'min-h-[200px] p-4 border border-input rounded-md bg-background prose prose-sm max-w-none focus:outline-none focus:ring-2 focus:ring-ring ring-offset-background',
         placeholder: placeholder || 'Start typing...',
       },
     },
@@ -41,7 +41,7 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
 
   return (
     <div className="space-y-2">
-      <div className="flex flex-wrap gap-1 p-2 border-b rounded-t-md bg-muted">
+      <div className="flex flex-wrap gap-1 p-2 border-b border-input rounded-t-md bg-muted">
         <Button
           variant="ghost"
           size="sm"
